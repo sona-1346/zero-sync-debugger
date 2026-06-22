@@ -17,7 +17,7 @@ from api.routes import router as api_router
 
 app = FastAPI(
     title="Zero-Sync Debugger API",
-    description="Backend API for remembering and resolving developer bugs using SQLite, OpenAI and Parcle API.",
+    description="Backend API for remembering and resolving developer bugs using SQLite, OpenAI and Parcel API.",
     version="1.0.0"
 )
 

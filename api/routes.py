@@ -13,14 +13,14 @@ from models.bug import (
 )
 from services.ai_service import AIService
 from services.search_service import SearchService
-from memory.parcle_service import ParcleMemoryService
+from memory.parcel_service import ParcelMemoryService
 
 router = APIRouter()
 
 # Instantiate services
 ai_service = AIService()
 search_service = SearchService(ai_service)
-memory_service = ParcleMemoryService()
+memory_service = ParcelMemoryService()
 
 @router.post("/submit_error", response_model=BugAnalysisResponse)
 def submit_error(request: BugSubmitRequest, db: Session = Depends(get_db)):
@@ -134,13 +134,19 @@ def submit_error(request: BugSubmitRequest, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_bug)
 
-    # 3. Store in Memory Layer (Parcle API)
-    memory_service.ingest_bug(
+    # 3. Store in Memory Layer (Parcel API)
+    print("Calling Parcel Memory Service...")
+
+    memory_result = memory_service.ingest_bug(
         project_name=new_bug.project_name,
         error_message=new_bug.error_message,
         root_cause=new_bug.root_cause,
         solution=analysis.get("solution", "")
     )
+
+    print(f"Parcel Result: {memory_result}")
+
+    print(f"Parcel Result: {memory_result}")
 
     return BugAnalysisResponse(
         root_cause=new_bug.root_cause,
